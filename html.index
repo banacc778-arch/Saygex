@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Máy giải cấp số cộng và cấp số nhân</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Arial, sans-serif;
+      color: #172033;
+      background: #f4f6f9;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 24px; }
+    .container {
+      width: min(100%, 700px);
+      margin: 24px auto;
+      padding: 28px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 8px 28px rgba(24, 39, 75, .09);
+    }
+    h1 { margin: 0 0 8px; text-align: center; font-size: clamp(1.45rem, 4vw, 2rem); }
+    .intro { margin: 0 0 24px; text-align: center; color: #5b6475; line-height: 1.5; }
+    label { display: block; margin: 16px 0 6px; font-weight: 700; }
+    input, select {
+      display: block;
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #cbd1dc;
+      border-radius: 7px;
+      background: #fff;
+      color: inherit;
+      font: inherit;
+    }
+    input:focus, select:focus {
+      outline: 3px solid rgba(37, 99, 235, .18);
+      border-color: #2563eb;
+    }
+    .hint { margin: 6px 0 0; color: #647084; font-size: .9rem; }
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 13px;
+      border: 0;
+      border-radius: 7px;
+      background: #2563eb;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button:hover { background: #1d4ed8; }
+    button:focus-visible { outline: 3px solid #93c5fd; outline-offset: 2px; }
+    .result {
+      margin-top: 22px;
+      padding: 18px;
+      border: 1px solid #bbf7d0;
+      border-left: 5px solid #16a34a;
+      border-radius: 8px;
+      background: #f0fdf4;
+      line-height: 1.6;
+    }
+    .result h2 { margin: 0 0 10px; font-size: 1.2rem; }
+    .result h3 { margin: 14px 0 8px; font-size: 1.05rem; }
+    .result p { margin: 6px 0; }
+    .solution + .solution { margin-top: 16px; padding-top: 12px; border-top: 1px solid #bbf7d0; }
+    .result.is-error {
+      border-color: #fecaca;
+      border-left-color: #dc2626;
+      background: #fef2f2;
+      color: #991b1b;
+    }
+    [hidden] { display: none !important; }
+    @media (max-width: 520px) {
+      body { padding: 12px; }
+      .container { margin: 8px auto; padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>Máy giải cấp số</h1>
+    <p class="intro">Tính uₙ và Sₙ, hoặc tìm tham số từ hai số hạng đã biết.</p>
+    <form id="calculator" novalidate>
+      <label for="type">Loại dãy</label>
+      <select id="type" name="type">
+        <option value="csc">Cấp số cộng</option>
+        <option value="csn">Cấp số nhân</option>
+      </select>
+      <label for="mode">Chức năng</label>
+      <select id="mode" name="mode">
+        <option value="calc">Tính uₙ và Sₙ</option>
+        <option value="solve">Tìm tham số từ hai số hạng</option>
+      </select>
+      <div id="calc-box">
+        <label for="u1">Số hạng đầu (u₁)</label>
+        <input id="u1" name="u1" type="number" step="any">
+        <div id="difference-field">
+          <label for="d">Công sai (d)</label>
+          <input id="d" name="d" type="number" step="any">
+        </div>
+        <div id="ratio-field" hidden>
+          <label for="q">Công bội (q)</label>
+          <input id="q" name="q" type="number" step="any">
+        </div>
+        <label for="n-un">Chỉ số cần tính số hạng (uₙ)</label>
+        <input id="n-un" name="n-un" type="number" min="1" step="1">
+        <label for="n-sn">Số lượng số hạng cần tính tổng (Sₙ)</label>
+        <input id="n-sn" name="n-sn" type="number" min="1" step="1">
+        <p class="hint">Nhập một hoặc cả hai chỉ số; mỗi chỉ số phải là số nguyên dương.</p>
+        <button type="submit">TÍNH TOÁN</button>
+      </div>
+      <div id="solve-box" hidden>
+        <h2>Nhập hai điều kiện đã biết</h2>
+        <label for="a">Chỉ số a</label>
+        <input id="a" name="a" type="number" min="1" step="1">
+        <label for="ua">Giá trị uₐ</label>
+        <input id="ua" name="ua" type="number" step="any">
+        <label for="b">Chỉ số b</label>
+        <input id="b" name="b" type="number" min="1" step="1">
+        <label for="ub">Giá trị uᵦ</label>
+        <input id="ub" name="ub" type="number" step="any">
+        <p class="hint">a và b phải là hai số nguyên dương khác nhau.</p>
+        <button type="submit">GIẢI HỆ</button>
+      </div>
+    </form>
+    <section id="result" class="result" aria-live="polite" role="status">
+      Chọn chức năng, nhập dữ liệu rồi bắt đầu tính.
+    </section>
+  </main>
+  <script>
+    const form = document.getElementById("calculator");
+    const typeInput = document.getElementById("type");
+    const modeInput = document.getElementById("mode");
+    const calcBox = document.getElementById("calc-box");
+    const solveBox = document.getElementById("solve-box");
+    const differenceField = document.getElementById("difference-field");
+    const ratioField = document.getElementById("ratio-field");
+    const differenceInput = document.getElementById("d");
+    const ratioInput = document.getElementById("q");
+    const result = document.getElementById("result");
+    function updateUI() {
+      const isSolving = modeInput.value === "solve";
+      const isArithmetic = typeInput.value === "csc";
+      calcBox.hidden = isSolving;
+      solveBox.hidden = !isSolving;
+      differenceField.hidden = !isArithmetic;
+      ratioField.hidden = isArithmetic;
+      document.getElementById("u1").required = !isSolving;
+      document.getElementById("n-un").required = false;
+      document.getElementById("n-sn").required = false;
+      differenceInput.required = !isSolving && isArithmetic;
+      ratioInput.required = !isSolving && !isArithmetic;
+      for (const id of ["a", "ua", "b", "ub"]) {
+        document.getElementById(id).required = isSolving;
+      }
+    }
+    function showError(message) {
+      result.classList.add("is-error");
+      result.textContent = message;
+    }
+    function showMessage(title, message) {
+      result.classList.remove("is-error");
+      result.replaceChildren();
+      const heading = document.createElement("h2");
+      heading.textContent = title;
+      const paragraph = document.createElement("p");
+      paragraph.textContent = message;
+      result.append(heading, paragraph);
+    }
+    function showSolutions(title, solutions) {
+      result.classList.remove("is-error");
+      result.replaceChildren();
+      const heading = document.createElement("h2");
+      heading.textContent = title;
+      result.appendChild(heading);
+      const formatter = new Intl.NumberFormat("vi-VN", {
+        maximumSignificantDigits: 12
+      });
+      for (const solution of solutions) {
+        const section = document.createElement("div");
+        section.className = "solution";
+        if (solution.label) {
+          const subheading = document.createElement("h3");
+          subheading.textContent = solution.label;
+          section.appendChild(subheading);
+        }
+        for (const [label, value] of solution.values) {
+          const paragraph = document.createElement("p");
+          const strong = document.createElement("strong");
+          strong.textContent = `${label}: `;
+          paragraph.append(strong, document.createTextNode(formatter.format(value)));
+          section.appendChild(paragraph);
+        }
+        result.appendChild(section);
+      }
+    }
+    function readFiniteNumber(id, label) {
+      const value = document.getElementById(id).valueAsNumber;
+      if (!Number.isFinite(value)) {
+        throw new Error(`Vui lòng nhập ${label} là một số hữu hạn.`);
+      }
+      return value;
+    }
+    function readPositiveIndex(id, label) {
+      const value = readFiniteNumber(id, label);
+      if (!Number.isSafeInteger(value) || value < 1) {
+        throw new Error(`${label} phải là số nguyên dương trong phạm vi tính toán an toàn.`);
+      }
+      return value;
+    }
+    function calculateSequence() {
+      const u1 = readFiniteNumber("u1", "số hạng đầu u₁");
+      const rawTermIndex = document.getElementById("n-un").value.trim();
+      const rawSumIndex = document.getElementById("n-sn").value.trim();
+      if (!rawTermIndex && !rawSumIndex) {
+        throw new Error("Vui lòng nhập chỉ số cần tính uₙ, Sₙ hoặc cả hai.");
+      }
+      const termIndex = rawTermIndex ? readPositiveIndex("n-un", "chỉ số uₙ") : null;
+      const sumCount = rawSumIndex ? readPositiveIndex("n-sn", "số lượng số hạng tính Sₙ") : null;
+      let un = null;
+      let sum = null;
+      let title;
+      if (typeInput.value === "csc") {
+        const d = readFiniteNumber("d", "công sai d");
+        if (termIndex !== null) {
+          un = u1 + (termIndex - 1) * d;
+        }
+        if (sumCount !== null) {
+          sum = sumCount * (2 * u1 + (sumCount - 1) * d) / 2;
+        }
+        title = "Kết quả cấp số cộng";
+      } else {
+        const q = readFiniteNumber("q", "công bội q");
+        if (termIndex !== null) {
+          un = u1 * Math.pow(q, termIndex - 1);
+        }
+        if (sumCount !== null) {
+          sum = q === 1
+            ? sumCount * u1
+            : u1 * (Math.pow(q, sumCount) - 1) / (q - 1);
+        }
+        title = "Kết quả cấp số nhân";
+      }
+      if ((un !== null && !Number.isFinite(un)) || (sum !== null && !Number.isFinite(sum))) {
+        throw new Error("Kết quả quá lớn để hiển thị. Hãy kiểm tra lại các giá trị đã nhập.");
+      }
+      const values = [];
+      if (termIndex !== null) {
+        values.push([`Số hạng thứ ${termIndex} (u${termIndex})`, un]);
+      }
+      if (sumCount !== null) {
+        values.push([`Tổng ${sumCount} số hạng đầu (S${sumCount})`, sum]);
+      }
+      showSolutions(title, [{ values }]);
+    }
+    function solveParameters() {
+      const a = readPositiveIndex("a", "a");
+      const ua = readFiniteNumber("ua", "uₐ");
+      const b = readPositiveIndex("b", "b");
+      const ub = readFiniteNumber("ub", "uᵦ");
+      if (a === b) {
+        throw new Error("a và b phải khác nhau để xác định tham số.");
+      }
+      if (typeInput.value === "csc") {
+        const d = (ub - ua) / (b - a);
+        const u1 = ua - (a - 1) * d;
+        if (!Number.isFinite(d) || !Number.isFinite(u1)) {
+          throw new Error("Kết quả quá lớn để hiển thị. Hãy kiểm tra lại các giá trị.");
+        }
+        showSolutions("Kết quả giải hệ cấp số cộng", [{
+          values: [
+            ["Số hạng đầu (u₁)", u1],
+            ["Công sai (d)", d]
+          ]
+        }]);
+        return;
+      }
+      const firstIndex = Math.min(a, b);
+      const lastIndex = Math.max(a, b);
+      const firstTerm = a < b ? ua : ub;
+      const lastTerm = a < b ? ub : ua;
+      const gap = lastIndex - firstIndex;
+      if (firstTerm === 0 && lastTerm === 0) {
+        showMessage(
+          "Không xác định duy nhất",
+          "Hai số hạng đều bằng 0 nên có vô số cấp số nhân phù hợp; không thể xác định riêng u₁ và q."
+        );
+        return;
+      }
+      if (firstTerm === 0) {
+        throw new Error("Không có cấp số nhân thực thỏa mãn: số hạng đầu đã biết bằng 0 nhưng số hạng sau khác 0.");
+      }
+      if (lastTerm === 0) {
+        if (firstIndex !== 1) {
+          throw new Error("Không có cấp số nhân thực thỏa mãn hai điều kiện này.");
+        }
+        showSolutions("Kết quả giải hệ cấp số nhân", [{
+          values: [
+            ["Số hạng đầu (u₁)", firstTerm],
+            ["Công bội (q)", 0]
+          ]
+        }]);
+        return;
+      }
+      const logMagnitude = (Math.log(Math.abs(lastTerm)) - Math.log(Math.abs(firstTerm))) / gap;
+      const magnitude = Math.exp(logMagnitude);
+      if (!Number.isFinite(magnitude) || magnitude === 0) {
+        throw new Error("Công bội nằm ngoài phạm vi số có thể biểu diễn.");
+      }
+      const ratioIsNegative = (lastTerm < 0) !== (firstTerm < 0);
+      const gapIsEven = gap % 2 === 0;
+      if (ratioIsNegative && gapIsEven) {
+        throw new Error("Không có công bội thực thỏa mãn: hai giá trị trái dấu nhưng khoảng cách chỉ số là số chẵn.");
+      }
+      const qValues = [];
+      if (ratioIsNegative) {
+        qValues.push(-magnitude);
+      } else if (gapIsEven) {
+        qValues.push(magnitude, -magnitude);
+      } else {
+        qValues.push(magnitude);
+      }
+      const solutions = qValues.map((q, index) => {
+        const divisor = Math.pow(q, firstIndex - 1);
+        const u1 = firstTerm / divisor;
+        if (!Number.isFinite(divisor) || divisor === 0 || !Number.isFinite(u1)) {
+          throw new Error("Số hạng đầu hoặc công bội nằm ngoài phạm vi số có thể biểu diễn.");
+        }
+        return {
+          label: qValues.length > 1 ? `Nghiệm ${index + 1}` : "",
+          values: [
+            ["Số hạng đầu (u₁)", u1],
+            ["Công bội (q)", q]
+          ]
+        };
+      });
+      showSolutions("Kết quả giải hệ cấp số nhân", solutions);
+    }
+    typeInput.addEventListener("change", updateUI);
+    modeInput.addEventListener("change", updateUI);
+    updateUI();
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      try {
+        if (modeInput.value === "solve") {
+          solveParameters();
+        } else {
+          calculateSequence();
+        }
+      } catch (error) {
+        showError(error.message);
+      }
+    });
+  </script>
+</body>
+</html>
