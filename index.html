@@ -1,212 +1,137 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Máy Giải Dao Động Điều Hòa</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Luyện thi Lịch sử 10 – Giữa HK1</title>
 <style>
+:root{--bg:#f7f5f0;--card:#fff;--tx:#1f2328;--mut:#6b7280;--pri:#9a3412;--ok:#15803d;--okb:#dcfce7;--no:#b91c1c;--nob:#fee2e2;--bd:#e5e1d8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17150f;--card:#221f17;--tx:#f1ede4;--mut:#a39e90;--pri:#fb923c;--ok:#4ade80;--okb:#14532d;--no:#f87171;--nob:#7f1d1d;--bd:#3a3528}}
 *{box-sizing:border-box}
-body{font-family:Arial,sans-serif;margin:0;padding:16px;background:linear-gradient(135deg,#f8fbff,#eaf4ff,#dceeff);color:#1e3a8a}
-.container{max-width:1000px;margin:auto}
-.card{background:#fff;border-radius:20px;padding:16px;margin-bottom:15px;box-shadow:0 4px 12px rgba(0,0,0,.1)}
-h2{font-size:clamp(20px,4vw,28px);margin-top:4px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
-.field{display:flex;flex-direction:column;gap:5px}
-label{font-size:13px;font-weight:bold;color:#31518f}
-input{width:100%;padding:12px;border:1px solid #93c5fd;border-radius:12px;font-size:16px;min-width:0;color:#172554;background:#fff}
-input:focus{outline:2px solid #60a5fa;border-color:#3b82f6}
-.actions{display:flex;flex-wrap:wrap;gap:10px}
-button{padding:12px 20px;border:0;border-radius:12px;background:#3b82f6;color:#fff;font-weight:bold;font-size:15px;cursor:pointer}
-button.secondary{background:#64748b}
-button:active{transform:scale(.98)}
-.hint{font-size:14px;line-height:1.6;color:#475569}
-#kq{white-space:pre-line;line-height:1.8;overflow-wrap:anywhere;font-size:16px;color:#172554}
-.result-title{font-weight:bold;color:#1d4ed8}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Georgia,'Times New Roman',serif;line-height:1.5}
+main{max-width:720px;margin:0 auto;padding:16px}
+h1{font-size:1.5rem;color:var(--pri);margin:8px 0}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin:12px 0}
+.q{font-weight:bold;margin-bottom:8px}
+.tag{font-size:.75rem;color:var(--mut);font-weight:normal}
+label{display:block;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;margin:6px 0;cursor:pointer}
+label:hover{border-color:var(--pri)}
+label.ok{background:var(--okb);border-color:var(--ok)}
+label.no{background:var(--nob);border-color:var(--no)}
+.tf{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px 0;border-top:1px solid var(--bd)}
+.tf .st{flex:1}.tf .bt{display:flex;gap:6px}
+.tf label{margin:0;padding:6px 12px}
+.pas{font-style:italic;color:var(--mut);border-left:3px solid var(--pri);padding-left:10px;margin-bottom:8px}
+button{background:var(--pri);color:#fff;border:0;border-radius:8px;padding:12px 22px;font-size:1rem;cursor:pointer;font-family:inherit}
+button.sec{background:transparent;color:var(--pri);border:1px solid var(--pri)}
+.res{font-size:1.3rem;text-align:center}
+.exp{font-size:.85rem;margin-top:6px;color:var(--ok)}
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+.home{text-align:center;max-width:380px;margin:12vh auto 0;padding:28px 20px}.home h2{color:var(--pri);margin:0 0 8px}.prog{color:var(--mut);font-size:.85rem;margin-bottom:6px}.fb{margin-top:12px;font-weight:bold}.fb.ok{color:var(--ok)}.fb.no{color:var(--no)}
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="card">
-    <h2>DAO ĐỘNG ĐIỀU HÒA – CHẤT ĐIỂM</h2>
-    <p class="hint">Nhập các đại lượng đã biết; có thể để trống những ô chưa biết. Các ô góc và biểu thức hỗ trợ π, √, dấu ^.</p>
-    <div class="grid">
-      <div class="field"><label for="A">Biên độ A</label><input id="A" placeholder="Ví dụ: 5"></div>
-      <div class="field"><label for="x">Li độ x</label><input id="x" placeholder="Ví dụ: √2/2"></div>
-      <div class="field"><label for="v">Vận tốc v</label><input id="v" placeholder="Ví dụ: -2π"></div>
-      <div class="field"><label for="a">Gia tốc a</label><input id="a" placeholder="Ví dụ: -4√2"></div>
-      <div class="field"><label for="vmax">Vận tốc cực đại vmax</label><input id="vmax" placeholder="vmax"></div>
-      <div class="field"><label for="amax">Gia tốc cực đại amax</label><input id="amax" placeholder="amax"></div>
-      <div class="field"><label for="w">Tần số góc ω</label><input id="w" placeholder="Ví dụ: 2π"></div>
-      <div class="field"><label for="T">Chu kỳ T</label><input id="T" placeholder="T"></div>
-      <div class="field"><label for="f">Tần số f</label><input id="f" placeholder="f"></div>
-      <div class="field"><label for="phi">Pha ban đầu φ (rad)</label><input id="phi" placeholder="Ví dụ: -π/3"></div>
-      <div class="field"><label for="t">Thời gian t</label><input id="t" placeholder="t"></div>
-      <div class="field"><label for="m">Khối lượng m</label><input id="m" placeholder="m"></div>
-    </div>
-  </div>
-  <div class="card actions">
-    <button onclick="tinh()">TÍNH</button>
-    <button class="secondary" onclick="xoa()">XÓA</button>
-  </div>
-  <div class="card"><div class="result-title">KẾT QUẢ</div><div id="kq" aria-live="polite">Kết quả sẽ hiện ở đây.</div></div>
-  <div class="card hint"><b>Cách nhập căn và π:</b><br>
-    √2 &nbsp; | &nbsp; √π &nbsp; | &nbsp; √(π/2) &nbsp; | &nbsp; √(2π) &nbsp; | &nbsp; 2√3 &nbsp; | &nbsp; π/3 &nbsp; | &nbsp; -π/3 &nbsp; | &nbsp; π^2<br>
-    Với căn chứa biểu thức, hãy dùng ngoặc, ví dụ <b>√(π/2)</b>. Có thể dùng dấu * để nhân rõ ràng.
-  </div>
-</div>
+<main>
+<div id="app"></div>
+</main>
 <script>
-// Chuyển biểu thức người dùng nhập thành biểu thức JavaScript có thể tính.
-// Hỗ trợ: π, √2, √π, √(π/2), 2√3, π^2, dấu × và ÷.
-function chuanHoaBieuThuc(input) {
-  let s = input.trim()
-    .replace(/×/g, '*').replace(/÷/g, '/')
-    .replace(/[−–]/g, '-').replace(/,/g, '.')
-    .replace(/π/g, 'PI')
-    .replace(/²/g, '^2').replace(/³/g, '^3');
-
-  // Đổi dấu căn thành Math.sqrt(...) và đọc đúng đối số của căn.
-  function xuLyCan(str) {
-    let out = '';
-    for (let i = 0; i < str.length; i++) {
-      if (str[i] !== '√') { out += str[i]; continue; }
-      let j = i + 1;
-      while (j < str.length && /\s/.test(str[j])) j++;
-      if (j >= str.length) throw new Error('Thiếu biểu thức sau dấu căn');
-      let arg = '';
-      if (str[j] === '(') {
-        let depth = 0;
-        const start = j;
-        do {
-          if (str[j] === '(') depth++;
-          else if (str[j] === ')') depth--;
-          j++;
-          if (j > str.length && depth > 0) throw new Error('Thiếu dấu ngoặc đóng');
-        } while (j < str.length && depth > 0);
-        if (depth !== 0) throw new Error('Thiếu dấu ngoặc đóng');
-        arg = str.slice(start + 1, j - 1);
-      } else if (str[j] === 'P' && str.slice(j, j + 2) === 'PI') {
-        arg = 'PI'; j += 2;
-      } else if (/[0-9.]/.test(str[j])) {
-        const match = str.slice(j).match(/^(?:\d+(?:\.\d*)?|\.\d+)/);
-        arg = match[0]; j += arg.length;
-      } else if (/[a-zA-Z]/i.test(str[j])) {
-        const match = str.slice(j).match(/^[a-zA-Z]+/);
-        arg = match[0]; j += arg.length;
-      } else {
-        throw new Error('Biểu thức sau dấu căn chưa hợp lệ');
-      }
-      out += 'Math.sqrt(' + xuLyCan(arg) + ')';
-      i = j - 1;
-    }
-    return out;
+// [câu hỏi, A, B, C, D, chỉ số đáp án đúng (0-3)]
+const MC=[
+["Khái niệm nào là đúng về Sử học?","Sử học là khoa học nghiên cứu về hoạt động của con người.","Sử học là khoa học nghiên cứu về văn hóa của con người.","Sử học là khoa học nghiên cứu về quá khứ của con người.","Sử học là khoa học nghiên cứu về tiến hóa của con người.",2],
+["Lịch sử được hiểu theo những nghĩa nào sau đây?","Tái hiện lịch sử và học tập lịch sử.","Hiện thực lịch sử và nhận thức lịch sử.","Nhận thức lịch sử và hiểu biết lịch sử.","Hiện thực lịch sử và tái hiện lịch sử.",1],
+["Đối tượng nghiên cứu của Sử học là","quá trình phát triển của loài người.","những hoạt động của loài người.","quá trình tiến hóa của loài người.","toàn bộ quá khứ của loài người.",3],
+["Sử học có chức năng nào sau đây?","Khoa học và nghiên cứu.","Khoa học và xã hội.","Khoa học và giáo dục.","Khoa học và nhân văn.",2],
+["Nội dung nào sau đây là nhiệm vụ của Sử học?","Nhận thức, giáo dục và dự báo.","Nghiên cứu, học tập và dự báo.","Giáo dục, khoa học và dự báo.","Nhận thức, khoa học và giáo dục.",0],
+["Một trong những yếu tố giúp chúng ta hội nhập thành công với khu vực và thế giới trong xu thế hiện nay là phải","học tập về lịch sử thế giới.","giao lưu học hỏi về lịch sử.","hiểu biết sâu sắc về lịch sử.","tham gia diễn đàn lịch sử.",2],
+["Hiểu biết sâu sắc về lịch sử và văn hóa dân tộc Việt Nam, của các nước trong khu vực và thế giới sẽ tạo ra cơ hội nào sau đây?","Định hướng nghề nghiệp.","Hiểu biết về tương lai.","Hợp tác về kinh tế.","Hội nhập thành công.",3],
+["Lịch sử cung cấp cho con người những thông tin hữu ích nào sau đây?","Quá khứ của chính con người và xã hội loài người.","Quá trình phát triển và tiến bộ của xã hội loài người.","Quá trình tiến hóa của con người trong lịch sử.","Quá trình lao động sản xuất và tiến hóa xã hội.",0],
+["Nhờ vào đâu con người biết về nguồn gốc tổ tiên của bản thân, gia đình, dòng họ, dân tộc...?","Tiến hóa.","Nghiên cứu.","Học tập.","Lịch sử.",3],
+["Điều cốt lõi trong hoạt động bảo tồn di sản là phải đảm bảo tính","kế thừa.","nguyên trạng.","tái tạo.","nhân tạo.",1],
+["Cơ sở khoa học cho công tác xác định giá trị, bảo tồn và phát huy giá trị đích thực của di sản là kết quả nghiên cứu","Sử học.","Địa lí.","Văn học.","Toán học.",0],
+["Tổ chức quốc tế nào sau đây ghi danh, công nhận các danh mục di sản văn hóa thế giới?","ASEAN.","NATO.","UNESCO.","WTO.",2],
+["Di sản nào sau đây được xem là di sản văn hóa vật thể?","Đàn ca tài tử.","Nghệ thuật ca trù.","Hát xướng, hát xoan.","Thành quách, lăng tẩm.",3],
+["Di sản nào sau đây được xem là di sản văn hóa phi vật thể?","Cung điện.","Nhà cổ.","Lăng tẩm.","Hát xoan.",3],
+["Di sản văn hóa là những sản phẩm tinh thần, vật chất có giá trị lịch sử, văn hóa, khoa học được lưu truyền từ:","Hiện tại đến tương lai.","Đời này sang đời khác.","Nước này sang nước khác.","Cá nhân này sang cá nhân khác.",1],
+["Yếu tố nào sau đây là quan trọng nhất để bảo tồn và phát huy giá trị di sản?","Phá bỏ di sản cũ để xây mới.","Giữ gìn tính nguyên trạng của di sản.","Chỉ quan tâm đến giá trị kinh tế.","Thay đổi toàn bộ cấu trúc di sản.",1],
+["Mối quan hệ giữa sử học và công tác bảo tồn di sản là:","Sử học cung cấp cơ sở khoa học để bảo tồn di sản.","Bảo tồn di sản chỉ nhằm mục đích thu lợi nhuận.","Sử học không có vai trò gì trong việc bảo tồn.","Chỉ có công nghệ mới giúp bảo tồn di sản.",0],
+["Nền văn minh Ai Cập ra đời ở châu Phi, trên lưu vực","sông Nin.","sông Hằng.","sông Ơ-phơ-grat.","sông Hoàng Hà.",0],
+["Hệ thống chữ viết cổ nhất của người Ai Cập được gọi là","chữ tượng thanh.","chữ tượng hình.","chữ tượng ý.","chữ cái Rô-ma.",1],
+["Loại hình kiến trúc tiêu biểu nhất của người Ai Cập cổ đại là","Tháp Thạt Luổng.","các kim tự tháp.","Đấu trường Rô-ma.","Vạn lí trường thành.",1],
+["Nền văn minh Trung Hoa được xây dựng đầu tiên ở lưu vực sông","Trường Giang.","Hằng.","Hoàng Hà.","Ấn.",2],
+["Văn minh của loài người là","sự tiến bộ về vật chất và tinh thần.","sự phát triển rất cao về giáo dục và văn hóa.","sự đi đầu của cuộc cách mạng khoa học công nghệ.","sự chuyển hóa thành công từ vượn thành người.",0],
+["So với những nền văn minh ở phương Tây, các nền văn minh ở phương Đông ra đời","muộn hơn.","sớm hơn.","cùng thời gian.","cùng khu vực địa lí.",1],
+["Một trong bốn phát minh lớn của người Trung Hoa vào thời cổ - trung đại và thế giới vẫn còn tiếp tục sử dụng đến ngày nay là","Phát minh ra la bàn.","Chế tạo bê tông.","Nêu ra thuyết nguyên tử.","Giỏi về giải phẫu người.",0],
+["Văn minh là trạng thái tiến hóa, phát triển cao của nền văn hóa, khi xã hội loài người đã có:","Công cụ đá cũ.","Nhà nước và chữ viết.","Lối sống bầy đàn.","Kỹ thuật săn bắt.",1],
+["Ai Cập cổ đại được hình thành bên lưu vực con sông nào?","Sông Ấn.","Sông Hằng.","Sông Nin.","Sông Dương Tử.",2],
+["Thành tựu văn hóa nào sau đây của cư dân Ấn Độ cổ - trung đại có ảnh hưởng lớn đến Việt Nam?","Kim tự tháp.","Phật giáo.","Nho giáo.","Chữ tượng hình.",1],
+["Chữ viết của người Trung Quốc thời cổ đại là:","Chữ tượng hình.","Chữ Latinh.","Chữ Phạn.","Chữ Quốc ngữ.",0],
+["Ý nghĩa quan trọng nhất của việc ra đời chữ viết ở các quốc gia cổ đại là:","Giúp con người trao đổi hàng hóa dễ dàng.","Là công cụ để ghi chép và lưu truyền tri thức, lịch sử.","Dùng để trang trí các công trình kiến trúc.","Giúp con người phát minh ra máy móc.",1]
+];
+// Đúng–Sai: [đoạn trích, [[mệnh đề, đúng?], ...]]
+const TF=[
+["\"Di sản văn hóa không chỉ là những gì thuộc về quá khứ mà còn là tài sản quý báu cho sự phát triển bền vững của quốc gia... Việc bảo tồn di sản cần có sự chung tay của nhà nước và cộng đồng.\" (SGK Lịch sử 10, Kết nối tri thức)",
+ [["Di sản văn hóa chỉ bao gồm các công trình kiến trúc cổ.",0],["Bảo tồn di sản là trách nhiệm riêng của các nhà sử học.",0],["Sử học đóng vai trò cung cấp tri thức để xác định giá trị của di sản.",1],["Phát triển du lịch dựa trên di sản văn hóa là một cách để phát triển kinh tế bền vững.",1]]],
+["\"Văn minh Trung Hoa thời cổ - trung đại có tầm ảnh hưởng sâu rộng đến các nước khu vực Đông Á. Các thành tựu như Nho giáo, chữ Hán và các phát minh kĩ thuật không chỉ thúc đẩy xã hội Trung Hoa phát triển mà còn lan tỏa mạnh mẽ sang Triều Tiên, Nhật Bản và Việt Nam, góp phần hình thành nên 'Vòng cung văn hóa chữ Hán'.\" (Nguyễn Gia Phu (Chủ biên), Lịch sử thế giới trung đại, NXB Giáo dục, 2003)",
+ [["Nho giáo là một trong những thành tựu tư tưởng quan trọng nhất của văn minh Trung Hoa.",1],["Việt Nam là một trong những quốc gia chịu ảnh hưởng sâu sắc từ văn minh Trung Hoa thời cổ - trung đại.",1],["Chữ Hán chỉ được sử dụng tại Trung Quốc và không được truyền bá ra bên ngoài.",0],["Văn minh Trung Hoa đóng vai trò là trung tâm lan tỏa văn hóa duy nhất của toàn thế giới thời bấy giờ.",0]]],
+["\"Sử học có vai trò vô cùng quan trọng trong công tác bảo tồn di sản văn hóa. Chính nhờ kết quả nghiên cứu lịch sử mà chúng ta có thể xác định được niên đại, nguồn gốc, ý nghĩa văn hóa và lịch sử của các hiện vật, di tích. Điều này không chỉ giúp việc bảo quản được chính xác mà còn là cơ sở để phát triển du lịch bền vững. Khi du khách đến thăm di tích, họ không chỉ nhìn thấy công trình mà còn được nghe những câu chuyện lịch sử có chiều sâu, kết nối quá khứ với hiện tại.\" (Tài liệu về Bảo tàng Lịch sử Quốc gia)",
+ [["Sử học giúp xác định ý nghĩa văn hóa và lịch sử của các hiện vật, di tích.",1],["Công tác bảo tồn di sản là vai trò duy nhất của Sử học đối với xã hội.",0],["Việc Sử học cung cấp câu chuyện lịch sử có chiều sâu giúp phát triển du lịch bền vững.",1],["Dựa vào đoạn văn có thể thấy được mối quan hệ giữa Sử học với ngành Du lịch.",1]]]
+];
+const sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const app=document.getElementById('app');
+let test=[],idx=0,score=0,q;
+function home(){app.innerHTML=`<div class="card home"><h2>📜 Luyện đề lịch sử</h2><p style="color:var(--mut)">Lịch sử 10 – Giữa học kỳ I<br>10 câu ngẫu nhiên, làm từng câu một.</p><button onclick="start()">Bắt đầu</button></div>`}
+function start(){
+  const mc=sh(MC).slice(0,8).map(m=>({k:'mc',q:m[0],o:sh([0,1,2,3].map(i=>({t:m[i+1],ok:i===m[5]})))}));
+  const tf=sh(TF).slice(0,2).map(t=>({k:'tf',p:t[0],s:sh(t[1])}));
+  test=sh([...mc,...tf]);idx=0;score=0;show();
+}
+function show(){
+  q=test[idx];q.failed=false;
+  let h=`<div class="prog">Câu ${idx+1}/${test.length}</div><div class="card">`;
+  if(q.k==='mc'){
+    h+=`<div class="q">${q.q}</div>`+q.o.map((o,i)=>`<label><input type="radio" name="a" value="${i}"> ${'ABCD'[i]}. ${o.t}</label>`).join('');
+  }else{
+    h+=`<div class="q">Đọc đoạn văn bản sau và chọn Đúng/Sai cho từng ý <span class="tag">(Đúng – Sai)</span></div><div class="pas">${q.p}</div>`+
+    q.s.map((s,i)=>`<div class="tf"><div class="st">${'abcd'[i]}) ${s[0]}</div><div class="bt"><label><input type="radio" name="t${i}" value="1"> Đúng</label><label><input type="radio" name="t${i}" value="0"> Sai</label></div></div>`).join('');
   }
-
-  s = xuLyCan(s);
-  s = s.replace(/\bPI\b/g, 'Math.PI');
-  s = s.replace(/\^/g, '**');
-  // Nhân ngầm: 2π, 3√2 (đã thành Math.sqrt), 2(...), )(, )2.
-  s = s.replace(/(\d|\))\s*(Math\.PI|Math\.sqrt\s*\(|\()/g, '$1*$2');
-  s = s.replace(/(Math\.PI|\))\s*(\d|Math\.PI|Math\.sqrt\s*\(|\()/g, '$1*$2');
-  return s;
+  h+=`<div id="fb" class="fb"></div><div class="bar" id="act"><button onclick="check()">Kiểm tra</button></div></div>`;
+  app.innerHTML=h;window.scrollTo(0,0);
 }
-function get(id) {
-  const raw = document.getElementById(id).value.trim();
-  if (raw === '') return NaN;
-  try {
-    const expr = chuanHoaBieuThuc(raw);
-    // Chỉ chấp nhận ký tự toán học và các hàm/hằng số do bộ chuyển đổi tạo ra.
-    if (!/^[0-9+\-*/().\s*MathPIeqrt]+$/.test(expr)) return NaN;
-    const value = Function('"use strict"; return (' + expr + ');')();
-    return typeof value === 'number' && Number.isFinite(value) ? value : NaN;
-  } catch (_) { return NaN; }
-}
-function show(value) {
-  if (!Number.isFinite(value)) return 'Chưa đủ dữ kiện';
-  if (Math.abs(value) < 1e-10) return '0';
-  const k = value / Math.PI;
-  const ds = [1, 2, 3, 4, 6, 8, 12, 16, 24];
-  for (const d of ds) {
-    const n = Math.round(k * d);
-    if (Math.abs(k - n / d) < 1e-7) {
-      if (n === 0) return '0';
-      if (d === 1) return n === 1 ? 'π' : n === -1 ? '-π' : n + 'π';
-      const sign = n < 0 ? '-' : '';
-      const absN = Math.abs(n);
-      const numerator = absN === 1 ? 'π' : absN + 'π';
-      return sign + numerator + '/' + d;
-    }
+function lock(v){document.querySelectorAll('input').forEach(i=>i.disabled=v)}
+function check(){
+  let ok,miss=false;
+  if(q.k==='mc'){
+    const v=document.querySelector('input[name=a]:checked');
+    if(!v)miss=true;else ok=q.o[+v.value].ok;
+  }else{
+    ok=true;
+    q.s.forEach((s,i)=>{const v=document.querySelector(`input[name=t${i}]:checked`);if(!v)miss=true;else if(+v.value!==s[1])ok=false});
   }
-  return Number(value.toFixed(8)).toString();
-}
-function tinh() {
-  let A = get('A'), x = get('x'), v = get('v'), a = get('a');
-  let vmax = get('vmax'), amax = get('amax');
-  let w = get('w'), T = get('T'), f = get('f');
-  const phi = get('phi'), t = get('t'), m = get('m');
-
-  if (Number.isNaN(w) && Number.isFinite(T) && T !== 0) w = 2 * Math.PI / T;
-  if (Number.isNaN(w) && Number.isFinite(f)) w = 2 * Math.PI * f;
-  if (Number.isNaN(T) && Number.isFinite(w) && w !== 0) T = 2 * Math.PI / Math.abs(w);
-  if (Number.isNaN(f) && Number.isFinite(T) && T !== 0) f = 1 / Math.abs(T);
-  if (Number.isNaN(T) && Number.isFinite(f) && f !== 0) T = 1 / Math.abs(f);
-
-  if (Number.isNaN(x) && Number.isFinite(a) && Number.isFinite(w) && w !== 0) x = -a / (w * w);
-  if (Number.isNaN(A) && Number.isFinite(vmax) && Number.isFinite(w) && w !== 0) A = Math.abs(vmax / w);
-  if (Number.isNaN(A) && Number.isFinite(amax) && Number.isFinite(w) && w !== 0) A = Math.abs(amax / (w * w));
-  if (Number.isNaN(A) && Number.isFinite(x) && Number.isFinite(v) && Number.isFinite(w) && w !== 0) A = Math.sqrt(x*x + v*v/(w*w));
-  if (Number.isNaN(vmax) && Number.isFinite(A) && Number.isFinite(w)) vmax = Math.abs(A * w);
-  if (Number.isNaN(amax) && Number.isFinite(A) && Number.isFinite(w)) amax = A * w * w;
-
-  if (Number.isFinite(A) && A < 0) A = Math.abs(A);
-  if (Number.isFinite(A) && Number.isFinite(w) && Number.isFinite(phi) && Number.isFinite(t)) {
-    const phase = w * t + phi;
-    x = A * Math.cos(phase);
-    v = -A * w * Math.sin(phase);
-    a = -w * w * x;
-  } else {
-    if (Number.isNaN(v) && Number.isFinite(A) && Number.isFinite(w) && Number.isFinite(x)) {
-      const val = A*A - x*x;
-      if (val >= -1e-9) v = Math.sqrt(Math.max(0, val)) * Math.abs(w);
-    }
-    if (Number.isNaN(a) && Number.isFinite(x) && Number.isFinite(w)) a = -w*w*x;
+  const fb=document.getElementById('fb'),act=document.getElementById('act');
+  if(miss){fb.className='fb no';fb.textContent='Hãy chọn đáp án trước khi kiểm tra.';return}
+  lock(true);
+  const last=idx===test.length-1;
+  if(ok){
+    if(!q.failed)score++;
+    fb.className='fb ok';fb.textContent='✔ Chính xác!';
+    act.innerHTML=`<button onclick="next()">${last?'Xem kết quả':'Câu tiếp theo'}</button>`;
+  }else{
+    q.failed=true;
+    fb.className='fb no';fb.textContent='✘ Chưa đúng.';
+    act.innerHTML=`<button onclick="retry()">Thử lại</button><button class="sec" onclick="next()">Bỏ qua</button>`;
   }
-
-  let W = NaN, Wd = NaN, Wt = NaN;
-  if (Number.isFinite(m) && Number.isFinite(A) && Number.isFinite(w)) {
-    W = 0.5 * m * w*w * A*A;
-    if (Number.isFinite(v)) Wd = 0.5 * m * v*v;
-    else if (Number.isFinite(x)) Wd = 0.5 * m * w*w * (A*A - x*x);
-    if (Number.isFinite(x)) Wt = 0.5 * m * w*w * x*x;
-    else if (Number.isFinite(W) && Number.isFinite(Wd)) Wt = W - Wd;
-  }
-  const N = Number.isFinite(t) && Number.isFinite(T) && T !== 0 ? t / Math.abs(T) : NaN;
-  document.getElementById('kq').innerText =
-`A = ${show(A)}
-
-x = ${show(x)}
-v = ${show(v)}
-a = ${show(a)}
-
-ω = ${show(w)}
-T = ${show(T)}
-f = ${show(f)}
-
-vmax = ${show(vmax)}
-amax = ${show(amax)}
-
-Cơ năng W = ${show(W)}
-Động năng Wđ = ${show(Wd)}
-Thế năng Wt = ${show(Wt)}
-
-Số dao động N = ${show(N)}
-
-Lưu ý: kết quả không phải bội đơn giản của π sẽ hiển thị dưới dạng số thập phân.`;
 }
-function xoa() {
-  document.querySelectorAll('input').forEach(input => input.value = '');
-  document.getElementById('kq').innerText = 'Kết quả sẽ hiện ở đây.';
+function retry(){
+  lock(false);document.querySelectorAll('input').forEach(i=>i.checked=false);
+  document.getElementById('fb').textContent='';
+  document.getElementById('act').innerHTML='<button onclick="check()">Kiểm tra</button>';
 }
+function next(){
+  idx++;
+  if(idx<test.length)return show();
+  app.innerHTML=`<div class="card home"><h2>Hoàn thành!</h2><p class="res">Đúng ngay lần đầu: <b>${score}/${test.length}</b></p><p class="tag">Câu bỏ qua hoặc phải thử lại không được tính điểm</p><div class="bar" style="justify-content:center"><button onclick="start()">Làm đề mới</button><button class="sec" onclick="home()">Về trang chủ</button></div></div>`;
+}
+home();
 </script>
 </body>
-  </html>
-  
+</html>
