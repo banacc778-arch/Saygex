@@ -28,6 +28,8 @@ button.sec{background:transparent;color:var(--pri);border:1px solid var(--pri)}
 .exp{font-size:.85rem;margin-top:6px;color:var(--ok)}
 .bar{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
 .home{text-align:center;max-width:380px;margin:12vh auto 0;padding:28px 20px}.home h2{color:var(--pri);margin:0 0 8px}.prog{color:var(--mut);font-size:.85rem;margin-bottom:6px}.fb{margin-top:12px;font-weight:bold}.fb.ok{color:var(--ok)}.fb.no{color:var(--no)}
+.header-info{display:flex;justify-content:space-between;align-items:center;color:var(--mut);font-size:.85rem;margin-bottom:6px}
+.timer{font-weight:bold;color:var(--pri);background:var(--bd);padding:2px 8px;border-radius:6px}
 </style>
 </head>
 <body>
@@ -35,7 +37,6 @@ button.sec{background:transparent;color:var(--pri);border:1px solid var(--pri)}
 <div id="app"></div>
 </main>
 <script>
-// [câu hỏi, A, B, C, D, chỉ số đáp án đúng (0-3)]
 const MC=[
 ["Khái niệm nào là đúng về Sử học?","Sử học là khoa học nghiên cứu về hoạt động của con người.","Sử học là khoa học nghiên cứu về văn hóa của con người.","Sử học là khoa học nghiên cứu về quá khứ của con người.","Sử học là khoa học nghiên cứu về tiến hóa của con người.",2],
 ["Lịch sử được hiểu theo những nghĩa nào sau đây?","Tái hiện lịch sử và học tập lịch sử.","Hiện thực lịch sử và nhận thức lịch sử.","Nhận thức lịch sử và hiểu biết lịch sử.","Hiện thực lịch sử và tái hiện lịch sử.",1],
@@ -67,7 +68,7 @@ const MC=[
 ["Chữ viết của người Trung Quốc thời cổ đại là:","Chữ tượng hình.","Chữ Latinh.","Chữ Phạn.","Chữ Quốc ngữ.",0],
 ["Ý nghĩa quan trọng nhất của việc ra đời chữ viết ở các quốc gia cổ đại là:","Giúp con người trao đổi hàng hóa dễ dàng.","Là công cụ để ghi chép và lưu truyền tri thức, lịch sử.","Dùng để trang trí các công trình kiến trúc.","Giúp con người phát minh ra máy móc.",1]
 ];
-// Đúng–Sai: [đoạn trích, [[mệnh đề, đúng?], ...]]
+
 const TF=[
 ["\"Di sản văn hóa không chỉ là những gì thuộc về quá khứ mà còn là tài sản quý báu cho sự phát triển bền vững của quốc gia... Việc bảo tồn di sản cần có sự chung tay của nhà nước và cộng đồng.\" (SGK Lịch sử 10, Kết nối tri thức)",
  [["Di sản văn hóa chỉ bao gồm các công trình kiến trúc cổ.",0],["Bảo tồn di sản là trách nhiệm riêng của các nhà sử học.",0],["Sử học đóng vai trò cung cấp tri thức để xác định giá trị của di sản.",1],["Phát triển du lịch dựa trên di sản văn hóa là một cách để phát triển kinh tế bền vững.",1]]],
@@ -76,22 +77,70 @@ const TF=[
 ["\"Sử học có vai trò vô cùng quan trọng trong công tác bảo tồn di sản văn hóa. Chính nhờ kết quả nghiên cứu lịch sử mà chúng ta có thể xác định được niên đại, nguồn gốc, ý nghĩa văn hóa và lịch sử của các hiện vật, di tích. Điều này không chỉ giúp việc bảo quản được chính xác mà còn là cơ sở để phát triển du lịch bền vững. Khi du khách đến thăm di tích, họ không chỉ nhìn thấy công trình mà còn được nghe những câu chuyện lịch sử có chiều sâu, kết nối quá khứ với hiện tại.\" (Tài liệu về Bảo tàng Lịch sử Quốc gia)",
  [["Sử học giúp xác định ý nghĩa văn hóa và lịch sử của các hiện vật, di tích.",1],["Công tác bảo tồn di sản là vai trò duy nhất của Sử học đối với xã hội.",0],["Việc Sử học cung cấp câu chuyện lịch sử có chiều sâu giúp phát triển du lịch bền vững.",1],["Dựa vào đoạn văn có thể thấy được mối quan hệ giữa Sử học với ngành Du lịch.",1]]]
 ];
+
 const sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 const app=document.getElementById('app');
 let test=[],idx=0,score=0,q;
-function home(){app.innerHTML=`<div class="card home"><h2>📜 Luyện đề lịch sử</h2><p style="color:var(--mut)">Lịch sử 10 – Giữa học kỳ I<br>10 câu ngẫu nhiên, làm từng câu một.</p><button onclick="start()">Bắt đầu</button></div>`}
+
+// Quản lý đếm thời gian
+let timerInterval = null;
+let secondsPassed = 0;
+
+function formatTime(totalSec) {
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  const pad = n => n.toString().padStart(2, '0');
+  return h > 0 ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+}
+
+function startTimer() {
+  stopTimer();
+  secondsPassed = 0;
+  timerInterval = setInterval(() => {
+    secondsPassed++;
+    const timerEl = document.getElementById('timer-display');
+    if (timerEl) timerEl.textContent = formatTime(secondsPassed);
+  }, 1000);
+}
+
+function stopTimer() {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+}
+
+function home(){
+  stopTimer();
+  app.innerHTML=`<div class="card home"><h2>📜 Luyện đề lịch sử</h2><p style="color:var(--mut)">Lịch sử 10 – Giữa học kỳ I<br>10 câu ngẫu nhiên, làm từng câu một.</p><button onclick="start()">Bắt đầu</button></div>`
+}
+
 let W={};try{W=JSON.parse(localStorage.getItem('w')||'{}')}catch(e){}
 const gw=k=>W[k]||1;
-function bump(k,up){W[k]=Math.min(8,Math.max(.15,gw(k)*(up?2:.4)));try{localStorage.setItem('w',JSON.stringify(W))}catch(e){}}
-function pick(a,n,key){a=[...a];const r=[];while(r.length<n&&a.length){let t=a.reduce((s,x)=>s+gw(key(x)),0),p=Math.random()*t,i=0;for(;i<a.length-1;i++){p-=gw(key(a[i]));if(p<=0)break}r.push(a.splice(i,1)[0])}return r}
-function start(){
-  const mc=pick(MC,8,m=>m[0]).map(m=>({k:'mc',key:m[0],q:m[0],o:sh([0,1,2,3].map(i=>({t:m[i+1],ok:i===m[5]})))}));
-  const tf=pick(TF,2,t=>t[0]).map(t=>({k:'tf',key:t[0],p:t[0],s:sh(t[1])}));
-  test=sh([...mc,...tf]);idx=0;score=0;show();
+function bump(k,up){W[k]=Math.min(5,Math.max(.3,gw(k)*(up?1.5:.7)));try{localStorage.setItem('w',JSON.stringify(W))}catch(e){}}
+
+function pickRandom(arr, n) {
+  const shuffled = [...arr].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, n);
 }
+
+function start(){
+  const numTf = Math.random() < 0.4 ? 0 : (Math.random() < 0.7 ? 1 : 2);
+  const numMc = 10 - numTf;
+
+  const mc = pickRandom(MC, numMc).map(m=>({k:'mc',key:m[0],q:m[0],o:sh([0,1,2,3].map(i=>({t:m[i+1],ok:i===m[5]})))}));
+  const tf = pickRandom(TF, numTf).map(t=>({k:'tf',key:t[0],p:t[0],s:sh(t[1])}));
+  
+  test = sh([...mc, ...tf]);
+  idx = 0; score = 0; 
+  startTimer();
+  show();
+}
+
 function show(){
   q=test[idx];q.failed=false;
-  let h=`<div class="prog">Câu ${idx+1}/${test.length}</div><div class="card">`;
+  let h=`<div class="header-info"><span class="prog">Câu ${idx+1}/${test.length}</span><span class="timer">⏱ <span id="timer-display">${formatTime(secondsPassed)}</span></span></div><div class="card">`;
   if(q.k==='mc'){
     h+=`<div class="q">${q.q}</div>`+q.o.map((o,i)=>`<label><input type="radio" name="a" value="${i}"> ${'ABCD'[i]}. ${o.t}</label>`).join('');
   }else{
@@ -134,7 +183,8 @@ function retry(){
 function next(){
   idx++;
   if(idx<test.length)return show();
-  app.innerHTML=`<div class="card home"><h2>Hoàn thành!</h2><p class="res">Đúng ngay lần đầu: <b>${score}/${test.length}</b></p><p class="tag">Câu bỏ qua hoặc phải thử lại không được tính điểm</p><div class="bar" style="justify-content:center"><button onclick="start()">Làm đề mới</button><button class="sec" onclick="home()">Về trang chủ</button></div></div>`;
+  stopTimer();
+  app.innerHTML=`<div class="card home"><h2>Hoàn thành!</h2><p class="res">Đúng ngay lần đầu: <b>${score}/${test.length}</b></p><p style="text-align:center;color:var(--pri);font-weight:bold">⏱ Thời gian làm bài: ${formatTime(secondsPassed)}</p><p class="tag">Câu bỏ qua hoặc phải thử lại không được tính điểm</p><div class="bar" style="justify-content:center"><button onclick="start()">Làm đề mới</button><button class="sec" onclick="home()">Về trang chủ</button></div></div>`;
 }
 home();
 </script>
