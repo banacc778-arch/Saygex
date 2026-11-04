@@ -80,9 +80,13 @@ const sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|
 const app=document.getElementById('app');
 let test=[],idx=0,score=0,q;
 function home(){app.innerHTML=`<div class="card home"><h2>📜 Luyện đề lịch sử</h2><p style="color:var(--mut)">Lịch sử 10 – Giữa học kỳ I<br>10 câu ngẫu nhiên, làm từng câu một.</p><button onclick="start()">Bắt đầu</button></div>`}
+let W={};try{W=JSON.parse(localStorage.getItem('w')||'{}')}catch(e){}
+const gw=k=>W[k]||1;
+function bump(k,up){W[k]=Math.min(8,Math.max(.15,gw(k)*(up?2:.4)));try{localStorage.setItem('w',JSON.stringify(W))}catch(e){}}
+function pick(a,n,key){a=[...a];const r=[];while(r.length<n&&a.length){let t=a.reduce((s,x)=>s+gw(key(x)),0),p=Math.random()*t,i=0;for(;i<a.length-1;i++){p-=gw(key(a[i]));if(p<=0)break}r.push(a.splice(i,1)[0])}return r}
 function start(){
-  const mc=sh(MC).slice(0,8).map(m=>({k:'mc',q:m[0],o:sh([0,1,2,3].map(i=>({t:m[i+1],ok:i===m[5]})))}));
-  const tf=sh(TF).slice(0,2).map(t=>({k:'tf',p:t[0],s:sh(t[1])}));
+  const mc=pick(MC,8,m=>m[0]).map(m=>({k:'mc',key:m[0],q:m[0],o:sh([0,1,2,3].map(i=>({t:m[i+1],ok:i===m[5]})))}));
+  const tf=pick(TF,2,t=>t[0]).map(t=>({k:'tf',key:t[0],p:t[0],s:sh(t[1])}));
   test=sh([...mc,...tf]);idx=0;score=0;show();
 }
 function show(){
@@ -112,10 +116,11 @@ function check(){
   lock(true);
   const last=idx===test.length-1;
   if(ok){
-    if(!q.failed)score++;
+    if(!q.failed){score++;bump(q.key,false)}
     fb.className='fb ok';fb.textContent='✔ Chính xác!';
     act.innerHTML=`<button onclick="next()">${last?'Xem kết quả':'Câu tiếp theo'}</button>`;
   }else{
+    if(!q.failed)bump(q.key,true);
     q.failed=true;
     fb.className='fb no';fb.textContent='✘ Chưa đúng.';
     act.innerHTML=`<button onclick="retry()">Thử lại</button><button class="sec" onclick="next()">Bỏ qua</button>`;
