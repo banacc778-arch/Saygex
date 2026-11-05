@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Luyện thi Lịch sử 10 – Giữa HK1</title>
+<title>Luyện ôn tập Địa lí – Trắc nghiệm & Đúng/Sai</title>
 <style>
 :root{--bg:#f7f5f0;--card:#fff;--tx:#1f2328;--mut:#6b7280;--pri:#9a3412;--ok:#15803d;--okb:#dcfce7;--no:#b91c1c;--nob:#fee2e2;--bd:#e5e1d8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17150f;--card:#221f17;--tx:#f1ede4;--mut:#a39e90;--pri:#fb923c;--ok:#4ade80;--okb:#14532d;--no:#f87171;--nob:#7f1d1d;--bd:#3a3528}}
@@ -22,7 +22,7 @@ label.no{background:var(--nob);border-color:var(--no)}
 .tf .st{flex:1}.tf .bt{display:flex;gap:6px}
 .tf label{margin:0;padding:6px 12px}
 .pas{font-style:italic;color:var(--mut);border-left:3px solid var(--pri);padding-left:10px;margin-bottom:8px}
-button{background:var(--pri);color:#fff;border:0;border-radius:8px;padding:12px 22px;font-size:1rem;cursor:pointer;font-family:inherit}
+button{background:var(--pri);color:#fff;border:0;border-radius:8px;padding:12px 22px;font-size:1.0rem;cursor:pointer;font-family:inherit}
 button.sec{background:transparent;color:var(--pri);border:1px solid var(--pri)}
 .res{font-size:1.3rem;text-align:center}
 .exp{font-size:.85rem;margin-top:6px;color:var(--ok)}
@@ -37,54 +37,106 @@ button.sec{background:transparent;color:var(--pri);border:1px solid var(--pri)}
 <div id="app"></div>
 </main>
 <script>
+// Tổng hợp 20 câu trắc nghiệm nhiều lựa chọn
 const MC=[
-["Khái niệm nào là đúng về Sử học?","Sử học là khoa học nghiên cứu về hoạt động của con người.","Sử học là khoa học nghiên cứu về văn hóa của con người.","Sử học là khoa học nghiên cứu về quá khứ của con người.","Sử học là khoa học nghiên cứu về tiến hóa của con người.",2],
-["Lịch sử được hiểu theo những nghĩa nào sau đây?","Tái hiện lịch sử và học tập lịch sử.","Hiện thực lịch sử và nhận thức lịch sử.","Nhận thức lịch sử và hiểu biết lịch sử.","Hiện thực lịch sử và tái hiện lịch sử.",1],
-["Đối tượng nghiên cứu của Sử học là","quá trình phát triển của loài người.","những hoạt động của loài người.","quá trình tiến hóa của loài người.","toàn bộ quá khứ của loài người.",3],
-["Sử học có chức năng nào sau đây?","Khoa học và nghiên cứu.","Khoa học và xã hội.","Khoa học và giáo dục.","Khoa học và nhân văn.",2],
-["Nội dung nào sau đây là nhiệm vụ của Sử học?","Nhận thức, giáo dục và dự báo.","Nghiên cứu, học tập và dự báo.","Giáo dục, khoa học và dự báo.","Nhận thức, khoa học và giáo dục.",0],
-["Một trong những yếu tố giúp chúng ta hội nhập thành công với khu vực và thế giới trong xu thế hiện nay là phải","học tập về lịch sử thế giới.","giao lưu học hỏi về lịch sử.","hiểu biết sâu sắc về lịch sử.","tham gia diễn đàn lịch sử.",2],
-["Hiểu biết sâu sắc về lịch sử và văn hóa dân tộc Việt Nam, của các nước trong khu vực và thế giới sẽ tạo ra cơ hội nào sau đây?","Định hướng nghề nghiệp.","Hiểu biết về tương lai.","Hợp tác về kinh tế.","Hội nhập thành công.",3],
-["Lịch sử cung cấp cho con người những thông tin hữu ích nào sau đây?","Quá khứ của chính con người và xã hội loài người.","Quá trình phát triển và tiến bộ của xã hội loài người.","Quá trình tiến hóa của con người trong lịch sử.","Quá trình lao động sản xuất và tiến hóa xã hội.",0],
-["Nhờ vào đâu con người biết về nguồn gốc tổ tiên của bản thân, gia đình, dòng họ, dân tộc...?","Tiến hóa.","Nghiên cứu.","Học tập.","Lịch sử.",3],
-["Điều cốt lõi trong hoạt động bảo tồn di sản là phải đảm bảo tính","kế thừa.","nguyên trạng.","tái tạo.","nhân tạo.",1],
-["Cơ sở khoa học cho công tác xác định giá trị, bảo tồn và phát huy giá trị đích thực của di sản là kết quả nghiên cứu","Sử học.","Địa lí.","Văn học.","Toán học.",0],
-["Tổ chức quốc tế nào sau đây ghi danh, công nhận các danh mục di sản văn hóa thế giới?","ASEAN.","NATO.","UNESCO.","WTO.",2],
-["Di sản nào sau đây được xem là di sản văn hóa vật thể?","Đàn ca tài tử.","Nghệ thuật ca trù.","Hát xướng, hát xoan.","Thành quách, lăng tẩm.",3],
-["Di sản nào sau đây được xem là di sản văn hóa phi vật thể?","Cung điện.","Nhà cổ.","Lăng tẩm.","Hát xoan.",3],
-["Di sản văn hóa là những sản phẩm tinh thần, vật chất có giá trị lịch sử, văn hóa, khoa học được lưu truyền từ:","Hiện tại đến tương lai.","Đời này sang đời khác.","Nước này sang nước khác.","Cá nhân này sang cá nhân khác.",1],
-["Yếu tố nào sau đây là quan trọng nhất để bảo tồn và phát huy giá trị di sản?","Phá bỏ di sản cũ để xây mới.","Giữ gìn tính nguyên trạng của di sản.","Chỉ quan tâm đến giá trị kinh tế.","Thay đổi toàn bộ cấu trúc di sản.",1],
-["Mối quan hệ giữa sử học và công tác bảo tồn di sản là:","Sử học cung cấp cơ sở khoa học để bảo tồn di sản.","Bảo tồn di sản chỉ nhằm mục đích thu lợi nhuận.","Sử học không có vai trò gì trong việc bảo tồn.","Chỉ có công nghệ mới giúp bảo tồn di sản.",0],
-["Nền văn minh Ai Cập ra đời ở châu Phi, trên lưu vực","sông Nin.","sông Hằng.","sông Ơ-phơ-grat.","sông Hoàng Hà.",0],
-["Hệ thống chữ viết cổ nhất của người Ai Cập được gọi là","chữ tượng thanh.","chữ tượng hình.","chữ tượng ý.","chữ cái Rô-ma.",1],
-["Loại hình kiến trúc tiêu biểu nhất của người Ai Cập cổ đại là","Tháp Thạt Luổng.","các kim tự tháp.","Đấu trường Rô-ma.","Vạn lí trường thành.",1],
-["Nền văn minh Trung Hoa được xây dựng đầu tiên ở lưu vực sông","Trường Giang.","Hằng.","Hoàng Hà.","Ấn.",2],
-["Văn minh của loài người là","sự tiến bộ về vật chất và tinh thần.","sự phát triển rất cao về giáo dục và văn hóa.","sự đi đầu của cuộc cách mạng khoa học công nghệ.","sự chuyển hóa thành công từ vượn thành người.",0],
-["So với những nền văn minh ở phương Tây, các nền văn minh ở phương Đông ra đời","muộn hơn.","sớm hơn.","cùng thời gian.","cùng khu vực địa lí.",1],
-["Một trong bốn phát minh lớn của người Trung Hoa vào thời cổ - trung đại và thế giới vẫn còn tiếp tục sử dụng đến ngày nay là","Phát minh ra la bàn.","Chế tạo bê tông.","Nêu ra thuyết nguyên tử.","Giỏi về giải phẫu người.",0],
-["Văn minh là trạng thái tiến hóa, phát triển cao của nền văn hóa, khi xã hội loài người đã có:","Công cụ đá cũ.","Nhà nước và chữ viết.","Lối sống bầy đàn.","Kỹ thuật săn bắt.",1],
-["Ai Cập cổ đại được hình thành bên lưu vực con sông nào?","Sông Ấn.","Sông Hằng.","Sông Nin.","Sông Dương Tử.",2],
-["Thành tựu văn hóa nào sau đây của cư dân Ấn Độ cổ - trung đại có ảnh hưởng lớn đến Việt Nam?","Kim tự tháp.","Phật giáo.","Nho giáo.","Chữ tượng hình.",1],
-["Chữ viết của người Trung Quốc thời cổ đại là:","Chữ tượng hình.","Chữ Latinh.","Chữ Phạn.","Chữ Quốc ngữ.",0],
-["Ý nghĩa quan trọng nhất của việc ra đời chữ viết ở các quốc gia cổ đại là:","Giúp con người trao đổi hàng hóa dễ dàng.","Là công cụ để ghi chép và lưu truyền tri thức, lịch sử.","Dùng để trang trí các công trình kiến trúc.","Giúp con người phát minh ra máy móc.",1]
+["Nguồn năng lượng chủ yếu sinh ra nội lực nằm ở đâu?","Bên ngoài lớp vỏ Trái Đất.","Trong lòng Trái Đất (năng lượng phóng xạ, nhiệt dịch...).","Từ bức xạ trực tiếp của Mặt Trời.","Từ sức hút của Mặt Trăng và các hành tinh.",1],
+["Biểu hiện nào sau đây thuộc về tác động của nội lực?","Hiện tượng uốn nếp, đứt gãy vỏ Trái Đất.","Quá trình phong hóa lý học và hóa học.","Quá trình bồi tụ trầm tích ở các đồng bằng hạ lưu sông.","Sự xâm thực của nước chảy tạo thành các hẻm vực.",0],
+["Nguồn năng lượng chủ yếu sinh ra ngoại lực là gì?","Sức hút của Mặt Trăng.","Năng lượng từ sự phân hủy phóng xạ.","Năng lượng bức xạ của Mặt Trời.","Nhiệt năng từ tâm Trái Đất tỏa ra.",2],
+["Hai lực lượng nội lực và ngoại lực có đặc điểm gì trong quá trình hình thành địa hình bề mặt Trái Đất?","Luôn diễn ra độc lập và không liên quan gì đến nhau.","Diễn ra đồng thời, đối lập nhau nhưng lại thống nhất với nhau.","Chỉ có nội lực mới tạo ra địa hình, ngoại lực chỉ phá hủy.","Ngoại lực đóng vai trò chủ đạo quyết định mọi dạng địa hình.",1],
+["Trái Đất tự quay quanh trục theo hướng nào?","Từ Đông sang Tây.","Từ Tây sang Đông.","Từ Bắc xuống Nam.","Từ Nam lên Bắc.",1],
+["Do ảnh hưởng của lực Cô-ri-ô-lít (lực lệch hướng do Trái Đất tự quay), ở Bán cầu Nam các vật thể chuyển động sẽ bị lệch về hướng nào?","Lệch về phía bên phải.","Lệch về phía bên trái.","Không bị lệch hướng.","Lệch thẳng về cực Nam.",1],
+["Hệ quả nào sau đây không phải là do chuyển động tự quay quanh trục của Trái Đất?","Hiện tượng ngày và đêm luân phiên nhau.","Sự lệch hướng chuyển động của các vật thể.","Các mùa trong năm nóng lạnh khác nhau.","Sự phân chia các múi giờ trên Trái Đất.",2],
+["Nguyên nhân chính sinh ra hiện tượng các mùa trong năm trên Trái Đất là do:","Trái Đất tự quay quanh trục có độ nghiêng lớn.","Trái Đất chuyển động quanh Mặt Trời với trục nghiêng không đổi phương.","Khoảng cách giữa Trái Đất và Mặt Trời thay đổi liên tục trong năm.","Tốc độ chuyển động của Trái Đất quanh Mặt Trời thay đổi theo mùa.",1],
+["Vào ngày nào trong năm ở bán cầu Bắc có thời gian ban ngày dài nhất (ngày hạ chí)?","Khoảng 22/6.","Khoảng 22/12.","Khoảng 21/3.","Khoảng 23/9.",0],
+["Cấu tạo của lớp vỏ Trái Đất gồm các mảng kiến tạo di chuyển trên tầng quánh của lớp man-ti trên. Có tất cả bao nhiêu mảng kiến tạo lớn?","5 mảng.","6 mảng.","7 mảng.","8 mảng.",2],
+["Tên của 7 mảng kiến tạo lớn trên Trái Đất bao gồm:","Á - Âu, Phi, Bắc Mỹ, Nam Mỹ, Thái Bình Dương, Ấn - Úc, Nam Cực.","Á - Âu, Phi, Bắc Mỹ, Nam Mỹ, Ấn Độ Dương, Đại Tây Dương, Bắc Cực.","Thái Bình Dương, Đại Tây Dương, Ấn Độ Dương, Bắc Băng Dương, Nam Cực, Á - Âu, Phi.","Bắc Mỹ, Nam Mỹ, Âu - Á, Phi, Úc, Thái Bình Dương, Ấn Độ.",0],
+["Vùng nào trên Trái Đất tập trung nhiều hoạt động động đất và núi lửa nhất?","Vùng trung tâm của các lục địa lớn.","Vùng ven các hoang mạc nhiệt đới khô hạn.","Khu vực tiếp xúc (ranh giới) của các mảng kiến tạo.","Khu vực sâu nhất nằm giữa các đại dương tĩnh lặng.",2],
+["Khí quyển Trái Đất được hiểu là gì?","Lớp nước bao bọc xung quanh bề mặt Trái Đất.","Lớp vỏ khí bao quanh Trái Đất, chịu ảnh hưởng của vũ trụ và bề mặt Trái Đất.","Phần lớp đất đá rắn chắc ở bề mặt ngoài cùng của Trái Đất.","Tập hợp tất cả các sinh vật sống trên các lục địa và đại dương.",1],
+["Yếu tố nào đóng vai trò là nguồn nhiệt chủ yếu cung cấp cho không khí trên Trái Đất?","Nhiệt từ trong lòng Trái Đất thoát ra ngoài qua các khe nứt.","Bức xạ từ Mặt Trời đi qua khí quyển chiếu xuống bề mặt Trái Đất.","Nhiệt lượng tỏa ra từ hoạt động sản xuất và sinh hoạt của con người.","Phản xạ nhiệt từ các khối băng ở hai cực Trái Đất.",1],
+["Càng lên cao (trong tầng đối lưu), nhiệt độ không khí thay đổi như thế nào?","Càng tăng lên rõ rệt.","Giảm dần (trung bình cứ lên cao 100m giảm 0,6°C).","Không thay đổi ở mọi độ cao.","Tăng rồi sau đó giảm đột ngột.",1],
+["Áp suất không khí là:","Sức nặng của không khí ép lên bề mặt Trái Đất.","Tốc độ chuyển động của các khối khí từ nơi này đến nơi khác.","Độ ẩm chứa trong một mét khối không khí.","Lượng nhiệt tỏa ra từ bầu khí quyển xuống mặt đất.",0],
+["Gió là sự chuyển động của không khí từ:","Vùng áp thấp về vùng áp cao.","Vùng áp cao về vùng áp thấp.","Xích đạo về phía hai cực Trái Đất.","Đại dương vào sâu trong đất liền.",1],
+["Loại gió thổi thường xuyên giữa khu vực áp cao chí tuyến về vùng áp thấp xích đạo được gọi là:","Gió Tây ôn đới.","Gió Mậu dịch (Tín phong).","Gió Đông cực.","Gió mùa.",1],
+["Nhân tố nào sau đây quyết định trực tiếp đến lượng mưa trên Trái Đất?","Khí áp và các loại gió thường xuyên.","Sự xuất hiện của các dòng biển nóng và lạnh.","Độ cao địa hình so với mực nước biển.","Góc chiếu của tia sáng mặt trời lúc giữa trưa.",0],
+["Khu vực nào trên Trái Đất thường có lượng mưa lớn nhất quanh năm?","Khu vực chí tuyến bắc và nam.","Vùng ôn đới lục địa.","Vùng xích đạo ẩm ướt.","Vùng cực giá lạnh.",2]
 ];
 
+// Tổng hợp các câu hỏi Đúng/Sai (dạng cụm nhóm ý)
 const TF=[
-["\"Di sản văn hóa không chỉ là những gì thuộc về quá khứ mà còn là tài sản quý báu cho sự phát triển bền vững của quốc gia... Việc bảo tồn di sản cần có sự chung tay của nhà nước và cộng đồng.\" (SGK Lịch sử 10, Kết nối tri thức)",
- [["Di sản văn hóa chỉ bao gồm các công trình kiến trúc cổ.",0],["Bảo tồn di sản là trách nhiệm riêng của các nhà sử học.",0],["Sử học đóng vai trò cung cấp tri thức để xác định giá trị của di sản.",1],["Phát triển du lịch dựa trên di sản văn hóa là một cách để phát triển kinh tế bền vững.",1]]],
-["\"Văn minh Trung Hoa thời cổ - trung đại có tầm ảnh hưởng sâu rộng đến các nước khu vực Đông Á. Các thành tựu như Nho giáo, chữ Hán và các phát minh kĩ thuật không chỉ thúc đẩy xã hội Trung Hoa phát triển mà còn lan tỏa mạnh mẽ sang Triều Tiên, Nhật Bản và Việt Nam, góp phần hình thành nên 'Vòng cung văn hóa chữ Hán'.\" (Nguyễn Gia Phu (Chủ biên), Lịch sử thế giới trung đại, NXB Giáo dục, 2003)",
- [["Nho giáo là một trong những thành tựu tư tưởng quan trọng nhất của văn minh Trung Hoa.",1],["Việt Nam là một trong những quốc gia chịu ảnh hưởng sâu sắc từ văn minh Trung Hoa thời cổ - trung đại.",1],["Chữ Hán chỉ được sử dụng tại Trung Quốc và không được truyền bá ra bên ngoài.",0],["Văn minh Trung Hoa đóng vai trò là trung tâm lan tỏa văn hóa duy nhất của toàn thế giới thời bấy giờ.",0]]],
-["\"Sử học có vai trò vô cùng quan trọng trong công tác bảo tồn di sản văn hóa. Chính nhờ kết quả nghiên cứu lịch sử mà chúng ta có thể xác định được niên đại, nguồn gốc, ý nghĩa văn hóa và lịch sử của các hiện vật, di tích. Điều này không chỉ giúp việc bảo quản được chính xác mà còn là cơ sở để phát triển du lịch bền vững. Khi du khách đến thăm di tích, họ không chỉ nhìn thấy công trình mà còn được nghe những câu chuyện lịch sử có chiều sâu, kết nối quá khứ với hiện tại.\" (Tài liệu về Bảo tàng Lịch sử Quốc gia)",
- [["Sử học giúp xác định ý nghĩa văn hóa và lịch sử của các hiện vật, di tích.",1],["Công tác bảo tồn di sản là vai trò duy nhất của Sử học đối với xã hội.",0],["Việc Sử học cung cấp câu chuyện lịch sử có chiều sâu giúp phát triển du lịch bền vững.",1],["Dựa vào đoạn văn có thể thấy được mối quan hệ giữa Sử học với ngành Du lịch.",1]]]
+["Về nguồn gốc và tác động của nội lực:",
+ [["Nội lực là những lực phát sinh từ bên ngoài bề mặt Trái Đất.",0],
+  ["Năng lượng sinh ra nội lực chủ yếu là năng lượng phóng xạ bên trong lòng Trái Đất.",1],
+  ["Nội lực làm cho bề mặt Trái Đất ngày càng gồ ghề, tạo ra các lục địa, núi cao và vực sâu.",1],
+  ["Các hiện tượng uốn nếp và đứt gãy không liên quan gì đến nội lực.",0]]],
+["Về ngoại lực và quá trình ngoại lực:",
+ [["Ngoại lực lấy nguồn năng lượng chính từ bức xạ của Mặt Trời.",1],
+  ["Các tác nhân chủ yếu của ngoại lực gồm có gió, nước chảy, băng hà, sóng biển...",1],
+  ["Ngoại lực có xu hướng san bằng các địa hình gồ ghề do nội lực tạo ra.",1],
+  ["Phong hóa là quá trình phá hủy đá và khoáng sản do tác động của nội lực.",0]]],
+["Về chuyển động tự quay quanh trục của Trái Đất:",
+ [["Trái Đất quay quanh trục theo hướng từ Đông sang Tây.",0],
+  ["Thời gian Trái Đất quay một vòng quanh trục là khoảng 24 giờ (1 ngày đêm).",1],
+  ["Chuyển động tự quay quanh trục tạo ra hiện tượng ngày và đêm luân phiên nhau trên toàn cầu.",1],
+  ["Ở bán cầu Bắc, lực Cô-ri-ô-lít làm vật thể chuyển động bị lệch về phía bên trái.",0]]],
+["Về chuyển động quay quanh Mặt Trời của Trái Đất:",
+ [["Trái Đất chuyển động quanh Mặt Trời theo quỹ đạo hình tròn tuyệt đối.",0],
+  ["Trục Trái Đất nghiêng và không đổi phương khi chuyển động quanh Mặt Trời.",1],
+  ["Chuyển động này cùng với trục nghiêng là nguyên nhân sinh ra các mùa trong năm.",1],
+  ["Càng về gần hai cực, hiện tượng ngày đêm dài ngắn theo mùa càng biểu hiện rõ rệt.",1]]],
+["Về các mảng kiến tạo:",
+ [["Thạch quyển được cấu tạo bởi các mảng kiến tạo lớn và nhỏ dịch chuyển trên tầng man-ti trên.",1],
+  ["Có tất cả 7 mảng kiến tạo lớn cấu tạo nên vỏ Trái Đất.",1],
+  ["Mảng Thái Bình Dương là mảng kiến tạo lớn nằm hoàn toàn ở bán cầu Nam.",0],
+  ["Nơi hai mảng kiến tạo xô vào nhau hoặc tách rời nhau thường là vùng ổn định nhất, ít xảy ra thiên tai.",0]]],
+["Về động đất và núi lửa:",
+ [["Động đất là hiện tượng rung chuyển đột ngột lớp vỏ Trái Đất từ sâu trong lòng đất.",1],
+  ["Núi lửa là hiện tượng phun trào mác-ma từ dưới sâu lên mặt đất.",1],
+  ["Động đất và núi lửa thường xảy ra ở các vùng ranh giới tiếp xúc của các mảng kiến tạo.",1],
+  ["Con người hiện nay đã có thể dự báo chính xác tuyệt đối thời gian và địa điểm xảy ra động đất trước vài tuần.",0]]],
+["Về cấu trúc và nhiệt độ không khí của khí quyển:",
+ [["Khí quyển gồm nhiều tầng khác nhau, trong đó tầng đối lưu nằm sát mặt đất nhất.",1],
+  ["Không khí ở tầng đối lưu nhận nhiệt chủ yếu trực tiếp từ ánh sáng mặt trời chiếu qua.",0],
+  ["Càng lên cao trong tầng đối lưu, nhiệt độ không khí càng giảm dần.",1],
+  ["Góc chiếu của tia sáng mặt trời càng lớn thì lượng nhiệt nhận được càng nhiều, nhiệt độ càng cao.",1]]],
+["Về khí áp và gió:",
+ [["Khí áp là sức nặng của không khí ép xuống bề mặt Trái Đất.",1],
+  ["Nhiệt độ tăng làm không khí nở ra, trọng lượng giảm nên khí áp giảm.",1],
+  ["Gió thổi từ các khu vực áp thấp về các khu vực áp cao.",0],
+  ["Gió Mậu dịch là loại gió thổi thường xuyên từ các khu áp cao chí tuyến về áp thấp xích đạo.",1]]],
+["Về độ ẩm và lượng mưa:",
+ [["Độ ẩm không khí biểu thị lượng hơi nước có trong không khí.",1],
+  ["Không khí chứa càng nhiều hơi nước thì lượng mưa rơi xuống càng ít.",0],
+  ["Vùng xích đạo là nơi có lượng mưa trung bình năm lớn nhất trên Trái Đất.",1],
+  ["Các vùng sâu trong lục địa, gần chí tuyến thường có lượng mưa rất ít, hình thành các hoang mạc lớn.",1]]],
+["Về mối quan hệ giữa các yếu tố khí hậu:",
+ [["Nhiệt độ không khí ảnh hưởng trực tiếp đến sự hình thành các đai khí áp trên Trái Đất.",1],
+  ["Sự chênh lệch khí áp giữa các vùng là nguyên nhân sinh ra gió.",1],
+  ["Địa hình cao hay thấp không ảnh hưởng gì đến nhiệt độ và lượng mưa của một khu vực.",0],
+  ["Khí hậu đóng vai trò quan trọng đối với sự phát triển của sinh vật và đời sống con người.",1]]]
 ];
 
 const sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 const app=document.getElementById('app');
-let test=[],idx=0,score=0,q;
 
-// Quản lý đếm thời gian
-let timerInterval = null;
-let secondsPassed = 0;
+let test=[], idx=0, score=0, q;
+let timerInterval=null, secondsPassed=0;
+
+// Hệ thống quản lý danh sách câu hỏi đã làm đúng để không lặp lại ngay
+let masterList = [];
+let correctIds = new Set();
+try {
+  correctIds = new Set(JSON.parse(localStorage.getItem('geo_correct') || '[]'));
+} catch(e){}
+
+function saveCorrect() {
+  try { localStorage.setItem('geo_correct', JSON.stringify([...correctIds])); } catch(e){}
+}
+
+function initMasterList() {
+  masterList = [];
+  MC.forEach((m, i) => masterList.push({type: 'mc', id: 'mc_'+i, data: m}));
+  TF.forEach((t, i) => masterList.push({type: 'tf', id: 'tf_'+i, data: t}));
+}
 
 function formatTime(totalSec) {
   const h = Math.floor(totalSec / 3600);
@@ -113,79 +165,133 @@ function stopTimer() {
 
 function home(){
   stopTimer();
-  app.innerHTML=`<div class="card home"><h2>📜 Luyện đề lịch sử</h2><p style="color:var(--mut)">Lịch sử 10 – Giữa học kỳ I<br>10 câu ngẫu nhiên, làm từng câu một.</p><button onclick="start()">Bắt đầu</button></div>`
+  let totalQ = MC.length + TF.length;
+  let remaining = totalQ - correctIds.size;
+  app.innerHTML=`<div class="card home">
+    <h2>🌍 Luyện ôn tập Địa lí</h2>
+    <p style="color:var(--mut)">Hệ thống 30 câu hỏi Địa lí tổng hợp<br>Làm lần lượt, câu trả lời đúng sẽ được ẩn đi.</p>
+    <p class="tag" style="margin-bottom:14px">Đã hoàn thành: <b>${correctIds.size}/${totalQ}</b> câu</p>
+    <div class="bar" style="justify-content:center; flex-direction:column; gap:8px">
+      <button onclick="start(false)">Tiếp tục học (${remaining} câu còn lại)</button>
+      <button class="sec" onclick="start(true)">Làm lại từ đầu (Reset tiến độ)</button>
+    </div>
+  </div>`;
 }
 
-let W={};try{W=JSON.parse(localStorage.getItem('w')||'{}')}catch(e){}
-const gw=k=>W[k]||1;
-function bump(k,up){W[k]=Math.min(5,Math.max(.3,gw(k)*(up?1.5:.7)));try{localStorage.setItem('w',JSON.stringify(W))}catch(e){}}
+function start(reset=false){
+  if(reset) {
+    correctIds.clear();
+    saveCorrect();
+  }
+  initMasterList();
 
-function pickRandom(arr, n) {
-  const shuffled = [...arr].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, n);
-}
-
-function start(){
-  const numTf = Math.random() < 0.4 ? 0 : (Math.random() < 0.7 ? 1 : 2);
-  const numMc = 10 - numTf;
-
-  const mc = pickRandom(MC, numMc).map(m=>({k:'mc',key:m[0],q:m[0],o:sh([0,1,2,3].map(i=>({t:m[i+1],ok:i===m[5]})))}));
-  const tf = pickRandom(TF, numTf).map(t=>({k:'tf',key:t[0],p:t[0],s:sh(t[1])}));
+  // Lọc ra những câu chưa làm đúng
+  let available = masterList.filter(item => !correctIds.has(item.id));
   
-  test = sh([...mc, ...tf]);
+  // Nếu đã làm đúng hết tất cả, reset lại danh sách đúng để tiếp tục vòng mới
+  if(available.length === 0) {
+    correctIds.clear();
+    saveCorrect();
+    available = masterList;
+  }
+
+  // Xáo trộn và lấy ra tối đa 10 câu cho mỗi phiên học
+  available = sh(available);
+  let selected = available.slice(0, 10);
+
+  test = selected.map(item => {
+    if(item.type === 'mc') {
+      const m = item.data;
+      return {
+        k: 'mc', id: item.id,
+        key: m[0], q: m[0],
+        o: sh([0,1,2,3].map(i=>({t: m[i+1], ok: i === m[5]})))
+      };
+    } else {
+      const t = item.data;
+      return {
+        k: 'tf', id: item.id,
+        key: t[0], p: t[0],
+        s: sh(t[1])
+      };
+    }
+  });
+
   idx = 0; score = 0; 
   startTimer();
   show();
 }
 
 function show(){
-  q=test[idx];q.failed=false;
-  let h=`<div class="header-info"><span class="prog">Câu ${idx+1}/${test.length}</span><span class="timer">⏱ <span id="timer-display">${formatTime(secondsPassed)}</span></span></div><div class="card">`;
+  q = test[idx]; q.failed = false;
+  let h = `<div class="header-info"><span class="prog">Câu ${idx+1}/${test.length}</span><span class="timer">⏱ <span id="timer-display">${formatTime(secondsPassed)}</span></span></div><div class="card">`;
   if(q.k==='mc'){
-    h+=`<div class="q">${q.q}</div>`+q.o.map((o,i)=>`<label><input type="radio" name="a" value="${i}"> ${'ABCD'[i]}. ${o.t}</label>`).join('');
+    h += `<div class="q">${q.q}</div>` + q.o.map((o,i)=>`<label><input type="radio" name="a" value="${i}"> ${'ABCD'[i]}. ${o.t}</label>`).join('');
   }else{
-    h+=`<div class="q">Đọc đoạn văn bản sau và chọn Đúng/Sai cho từng ý <span class="tag">(Đúng – Sai)</span></div><div class="pas">${q.p}</div>`+
+    h += `<div class="q">${q.key} <span class="tag">(Xác định Đúng/Sai cho từng ý)</span></div><div class="pas">${q.p}</div>` +
     q.s.map((s,i)=>`<div class="tf"><div class="st">${'abcd'[i]}) ${s[0]}</div><div class="bt"><label><input type="radio" name="t${i}" value="1"> Đúng</label><label><input type="radio" name="t${i}" value="0"> Sai</label></div></div>`).join('');
   }
-  h+=`<div id="fb" class="fb"></div><div class="bar" id="act"><button onclick="check()">Kiểm tra</button></div></div>`;
-  app.innerHTML=h;window.scrollTo(0,0);
+  h += `<div id="fb" class="fb"></div><div class="bar" id="act"><button onclick="check()">Kiểm tra</button></div></div>`;
+  app.innerHTML = h; window.scrollTo(0,0);
 }
+
 function lock(v){document.querySelectorAll('input').forEach(i=>i.disabled=v)}
+
 function check(){
-  let ok,miss=false;
+  let ok, miss=false;
   if(q.k==='mc'){
-    const v=document.querySelector('input[name=a]:checked');
-    if(!v)miss=true;else ok=q.o[+v.value].ok;
+    const v = document.querySelector('input[name=a]:checked');
+    if(!v) miss=true; else ok = q.o[+v.value].ok;
   }else{
-    ok=true;
-    q.s.forEach((s,i)=>{const v=document.querySelector(`input[name=t${i}]:checked`);if(!v)miss=true;else if(+v.value!==s[1])ok=false});
+    ok = true;
+    q.s.forEach((s,i)=>{
+      const v = document.querySelector(`input[name=t${i}]:checked`);
+      if(!v) miss=true; 
+      else if(+v.value !== s[1]) ok=false;
+    });
   }
-  const fb=document.getElementById('fb'),act=document.getElementById('act');
-  if(miss){fb.className='fb no';fb.textContent='Hãy chọn đáp án trước khi kiểm tra.';return}
+  const fb = document.getElementById('fb'), act = document.getElementById('act');
+  if(miss){ fb.className='fb no'; fb.textContent='Hãy chọn đáp án đầy đủ trước khi kiểm tra.'; return; }
   lock(true);
-  const last=idx===test.length-1;
+  const last = idx === test.length-1;
+  
   if(ok){
-    if(!q.failed){score++;bump(q.key,false)}
-    fb.className='fb ok';fb.textContent='✔ Chính xác!';
+    if(!q.failed){
+      score++;
+      correctIds.add(q.id); // Đánh dấu câu này đã làm đúng để không hiện lại
+      saveCorrect();
+    }
+    fb.className='fb ok'; fb.textContent='✔ Chính xác!';
     act.innerHTML=`<button onclick="next()">${last?'Xem kết quả':'Câu tiếp theo'}</button>`;
   }else{
-    if(!q.failed)bump(q.key,true);
-    q.failed=true;
-    fb.className='fb no';fb.textContent='✘ Chưa đúng.';
+    q.failed = true;
+    fb.className='fb no'; fb.textContent='✘ Chưa đúng.';
     act.innerHTML=`<button onclick="retry()">Thử lại</button><button class="sec" onclick="next()">Bỏ qua</button>`;
   }
 }
+
 function retry(){
-  lock(false);document.querySelectorAll('input').forEach(i=>i.checked=false);
+  lock(false); document.querySelectorAll('input').forEach(i=>i.checked=false);
   document.getElementById('fb').textContent='';
   document.getElementById('act').innerHTML='<button onclick="check()">Kiểm tra</button>';
 }
+
 function next(){
   idx++;
-  if(idx<test.length)return show();
+  if(idx < test.length) return show();
   stopTimer();
-  app.innerHTML=`<div class="card home"><h2>Hoàn thành!</h2><p class="res">Đúng ngay lần đầu: <b>${score}/${test.length}</b></p><p style="text-align:center;color:var(--pri);font-weight:bold">⏱ Thời gian làm bài: ${formatTime(secondsPassed)}</p><p class="tag">Câu bỏ qua hoặc phải thử lại không được tính điểm</p><div class="bar" style="justify-content:center"><button onclick="start()">Làm đề mới</button><button class="sec" onclick="home()">Về trang chủ</button></div></div>`;
+  app.innerHTML=`<div class="card home">
+    <h2>Hoàn thành phiên!</h2>
+    <p class="res">Đúng ngay lần đầu: <b>${score}/${test.length}</b></p>
+    <p style="text-align:center;color:var(--pri);font-weight:bold;margin:8px 0">⏱ Thời gian: ${formatTime(secondsPassed)}</p>
+    <p class="tag" style="margin-bottom:14px">Các câu đúng đã được ghi nhớ và ẩn khỏi các lần luyện tiếp theo.</p>
+    <div class="bar" style="justify-content:center; flex-direction:column; gap:8px">
+      <button onclick="start(false)">Tiếp tục phiên mới</button>
+      <button class="sec" onclick="home()">Về trang chủ</button>
+    </div>
+  </div>`;
 }
+
 home();
 </script>
 </body>
