@@ -61,7 +61,7 @@ const MC=[
 ["Khu vực nào trên Trái Đất thường có lượng mưa lớn nhất quanh năm?","Khu vực chí tuyến bắc và nam.","Vùng ôn đới lục địa.","Vùng xích đạo ẩm ướt.","Vùng cực giá lạnh.",2]
 ];
 
-// Tổng hợp các câu hỏi Đúng/Sai (dạng cụm nhóm ý)
+// Tổng hợp các câu hỏi Đúng/Sai
 const TF=[
 ["Về nguồn gốc và tác động của nội lực:",
  [["Nội lực là những lực phát sinh từ bên ngoài bề mặt Trái Đất.",0],
@@ -121,15 +121,15 @@ const app=document.getElementById('app');
 let test=[], idx=0, score=0, q;
 let timerInterval=null, secondsPassed=0;
 
-// Hệ thống quản lý danh sách câu hỏi đã làm đúng để không lặp lại ngay
+// Hệ thống quản lý danh sách câu hỏi đã làm đúng để ẩn đi
 let masterList = [];
 let correctIds = new Set();
 try {
-  correctIds = new Set(JSON.parse(localStorage.getItem('geo_correct') || '[]'));
+  correctIds = new Set(JSON.parse(localStorage.getItem('geo_correct_v2') || '[]'));
 } catch(e){}
 
 function saveCorrect() {
-  try { localStorage.setItem('geo_correct', JSON.stringify([...correctIds])); } catch(e){}
+  try { localStorage.setItem('geo_correct_v2', JSON.stringify([...correctIds])); } catch(e){}
 }
 
 function initMasterList() {
@@ -169,11 +169,11 @@ function home(){
   let remaining = totalQ - correctIds.size;
   app.innerHTML=`<div class="card home">
     <h2>🌍 Luyện ôn tập Địa lí</h2>
-    <p style="color:var(--mut)">Hệ thống 30 câu hỏi Địa lí tổng hợp<br>Làm lần lượt, câu trả lời đúng sẽ được ẩn đi.</p>
+    <p style="color:var(--mut)">Bộ đề chia nhỏ (10 câu/phiên)<br>Các câu trả lời đúng sẽ được ẩn đi cho đến khi hết kho.</p>
     <p class="tag" style="margin-bottom:14px">Đã hoàn thành: <b>${correctIds.size}/${totalQ}</b> câu</p>
     <div class="bar" style="justify-content:center; flex-direction:column; gap:8px">
-      <button onclick="start(false)">Tiếp tục học (${remaining} câu còn lại)</button>
-      <button class="sec" onclick="start(true)">Làm lại từ đầu (Reset tiến độ)</button>
+      <button onclick="start(false)">Làm phiên 10 câu (${remaining} câu chưa thuộc)</button>
+      <button class="sec" onclick="start(true)">Làm lại từ đầu (Reset toàn bộ)</button>
     </div>
   </div>`;
 }
@@ -188,14 +188,14 @@ function start(reset=false){
   // Lọc ra những câu chưa làm đúng
   let available = masterList.filter(item => !correctIds.has(item.id));
   
-  // Nếu đã làm đúng hết tất cả, reset lại danh sách đúng để tiếp tục vòng mới
+  // Nếu đã làm hết kho, reset lại tự động để bắt đầu vòng mới
   if(available.length === 0) {
     correctIds.clear();
     saveCorrect();
     available = masterList;
   }
 
-  // Xáo trộn và lấy ra tối đa 10 câu cho mỗi phiên học
+  // Lấy ngẫu nhiên tối đa 10 câu cho mỗi lượt làm ngắn gọn
   available = sh(available);
   let selected = available.slice(0, 10);
 
@@ -258,7 +258,7 @@ function check(){
   if(ok){
     if(!q.failed){
       score++;
-      correctIds.add(q.id); // Đánh dấu câu này đã làm đúng để không hiện lại
+      correctIds.add(q.id); // Ẩn câu đúng ở các lần sau
       saveCorrect();
     }
     fb.className='fb ok'; fb.textContent='✔ Chính xác!';
@@ -281,12 +281,12 @@ function next(){
   if(idx < test.length) return show();
   stopTimer();
   app.innerHTML=`<div class="card home">
-    <h2>Hoàn thành phiên!</h2>
+    <h2>Hoàn thành phiên 10 câu!</h2>
     <p class="res">Đúng ngay lần đầu: <b>${score}/${test.length}</b></p>
     <p style="text-align:center;color:var(--pri);font-weight:bold;margin:8px 0">⏱ Thời gian: ${formatTime(secondsPassed)}</p>
-    <p class="tag" style="margin-bottom:14px">Các câu đúng đã được ghi nhớ và ẩn khỏi các lần luyện tiếp theo.</p>
+    <p class="tag" style="margin-bottom:14px">Các câu đúng đã được tự động ẩn khỏi các lượt ôn tập tiếp theo.</p>
     <div class="bar" style="justify-content:center; flex-direction:column; gap:8px">
-      <button onclick="start(false)">Tiếp tục phiên mới</button>
+      <button onclick="start(false)">Làm tiếp 10 câu nữa</button>
       <button class="sec" onclick="home()">Về trang chủ</button>
     </div>
   </div>`;
@@ -295,4 +295,4 @@ function next(){
 home();
 </script>
 </body>
-</html>
+ </html>
